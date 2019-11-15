@@ -40,6 +40,20 @@ CREATE TABLE Medical_history(
 	PRIMARY KEY (HE_id)
 );
 
+CREATE TABLE Optional_treatment(
+	Duration VARCHAR(30),
+	Price 	 INT,
+	I_id	 VARCHAR(15),
+	PRIMARY KEY(I_id)
+);
+
+CREATE TABLE Guest(
+	Name VARCHAR(30),
+	G_id	 VARCHAR(15),
+	PRIMARY KEY(G_id)
+);
+
+
 
 
 -- here we go
