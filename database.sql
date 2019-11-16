@@ -9,6 +9,7 @@ CREATE TABLE Employee (
 	Contract:      VARCHAR(15)   NOT NULL,
 	Type:          VARCHAR(15)   NOT NULL,
 	E_id           VARCHAR(15)   NOT NULL,
+	HE_id		   VARCHAR(15)
 	PRIMARY KEY (E_id)
 );
 
@@ -71,11 +72,27 @@ CREATE TABLE Patient(
 	PRIMARY KEY (P_id)
 );
 
+CREATE TABLE Donate(
+	P_ID VARCHAR(15)    NOT NULL,
+	E_ID VARCHAR(15)    NOT NULL,
+	Amount_of_money INT NOT NULL,
+	PRIMARY KEY(P_ID,E_ID)
+);
 
+CREATE TABLE Visit(
+	P_ID VARCHAR(15)    NOT NULL,
+	E_ID VARCHAR(15)    NOT NULL,
+	Time DATETIME 		NOT NULL, 
+	PRIMARY KEY(P_ID,E_ID,Time)
+);
 
-
-
--- here we go
--- CREATE TABLE Patient{
--- 	P_ID : INT
--- }
+CREATE TABLE Get(
+	P_ID VARCHAR(15)    NOT NULL,
+	T_ID VARCHAR(15)    NOT NULL,
+	PRIMARY KEY(P_ID,T_ID)
+);
+CREATE TABLE Make_an_appointment(
+	P_ID VARCHAR(15)    NOT NULL,
+	E_ID VARCHAR(15)    NOT NULL,
+	PRIMARY KEY(P_ID,E_ID)
+);
