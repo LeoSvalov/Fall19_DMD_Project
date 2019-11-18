@@ -27,11 +27,12 @@ CREATE TABLE Employee (
 );
 
 CREATE TABLE Patient(
-	Fullname      VARCHAR(30)   NOT NULL,
+	Name      VARCHAR(30)   NOT NULL,
+	Surname		  VARCHAR(30)   NOT NULL,
 	Address       VARCHAR(30)   NOT NULL,
 	Dob           VARCHAR(15)   NOT NULL,
-	Ward_type     VARCHAR(12)   NOT NULL,
-	Room_num 	  VARCHAR(20)   NOT NULL,
+	Ward_type     VARCHAR(12),
+	Room_num 	  VARCHAR(20),
 	Sex      	  VARCHAR(15)   NOT NULL,
 	Type          VARCHAR(15)   NOT NULL,
 	P_ID          VARCHAR(15)   NOT NULL	PRIMARY KEY
@@ -123,8 +124,8 @@ INSERT INTO Employee VALUES
 ('Bekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'ftna', 'Doctor', '1BT');
 
 
-
---asdasdasdas
+INSERT INTO Patient	VALUE
+('Alice', 'Nemartyanova', 'Russia', '12/08/2000', 'terapevt', '200', 'female', 'not', 'Apat');
 
 
 
