@@ -18,7 +18,7 @@ CREATE TABLE Noticeboard(
 	Upcoming_events   VARCHAR(1000),
 	Date              DATE          NOT NULL,
 	E_id 	          VARCHAR(15)   REFERENCES Employee(E_id),
-	PRIMARY KEY(Date,E_id),
+	PRIMARY KEY(Date,E_id)
 );
 
 CREATE TABLE Stuff_schedule(
@@ -29,7 +29,7 @@ CREATE TABLE Stuff_schedule(
 );
 
 CREATE TABLE Hospital_equipment(
-	HE_id	VARCHAR(15)   NOT NULL,
+	HE_id VARCHAR(15)   NOT NULL,
 	PRIMARY KEY (HE_id)
 );
 
@@ -96,4 +96,7 @@ CREATE TABLE Make_an_appointment(
 	E_ID VARCHAR(15)    NOT NULL,
 	PRIMARY KEY(P_ID,E_ID)
 );
-
+	INSERT INTO Hospital_equipment VALUES
+	('qwe'),
+	('rewt'),
+	('feww');
