@@ -129,28 +129,4 @@ INSERT INTO Patient	VALUE
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+--script
