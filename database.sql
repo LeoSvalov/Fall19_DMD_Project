@@ -1,27 +1,27 @@
 DROP TABLE Notice_board;
 DROP TABLE Stuff_schedule;
 DROP TABLE Medical_history;
-DROP TABLE Guest;
 DROP TABLE Canteen_menu;
 DROP TABLE Donate;
 DROP TABLE Visit;
 DROP TABLE Get;
 DROP TABLE Make_an_appointment;
--- DROP TABLE Contribute; 
--- DROP TABLE Notify;
--- DROP TABLE Alert; --
--- DROP TABLE Control; --
--- DROP TABLE Fill_in; --
+DROP TABLE Contribute; 
+DROP TABLE Notify;
+DROP TABLE Control;
+-- tables to be done:
 -- DROP TABLE Create_Report; --
 -- DROP TABLE Assign; --
 -- DROP TABLE Receive; --
 -- DROP TABLE Conclude agreement; --
+DROP TABLE Guest;
 DROP TABLE Negotiate_a_purchase;
 DROP TABLE Hospital_equipment;
 DROP TABLE Optional_treatment;
 DROP TABLE Patient;
 DROP TABLE Employee;
 
+-- решить вопрос с fill in и medical history!
 
 CREATE TABLE Employee (
   Name          VARCHAR(30)   NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE Notice_board(
 );
 
 CREATE TABLE Stuff_schedule(
-  Shedule   VARCHAR(1000)  NOT NULL,
+  Schedule   VARCHAR(1000)  NOT NULL,
   Date      DATE           NOT NULL,
   E_ID     VARCHAR(15)    REFERENCES Employee(E_ID),
   PRIMARY KEY(Date,E_ID)
@@ -67,10 +67,10 @@ CREATE TABLE Patient(
 );
 
 CREATE TABLE Medical_history(
-  M_ID       VARCHAR(30)   NOT NULL    PRIMARY KEY,
-  Ilness        VARCHAR(30)   NOT NULL,
+  Illness        VARCHAR(30)   NOT NULL,
   Duration     VARCHAR(50)   NOT NULL,
   Attending_doctor VARCHAR(30)   NOT NULL,
+  E_ID        VARCHAR(15)   REFERENCES Employee(E_ID),
   P_ID        VARCHAR(15)   NOT NULL    REFERENCES Patient(P_ID)
 );
 
@@ -126,22 +126,23 @@ CREATE TABLE Negotiate_a_purchase(
   NP_ID        VARCHAR(30)    PRIMARY KEY
 );
 
--- CREATE TABLE Contribute(
--- 	Amount_of_money	 INT  NOT NULL,
--- 	G_ID     VARCHAR(15)  NOT NULL    REFERENCES Guest(G_ID),
--- 	E_ID     VARCHAR(15)  NOT NULL    REFERENCES Employee(E_ID),
--- 	PRIMARY KEY(G_ID,E_ID)
--- );
--- CREATE TABLE Notify(
--- 	E_ID     VARCHAR(15)    NOT NULL   REFERENCES Employee(E_ID),
--- 	P_ID 	 VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
--- 	PRIMARY KEY(P_ID,E_ID)
--- )
--- CREATE TABLE Manages(
--- 	E_ID     VARCHAR(15)    NOT NULL   REFERENCES Employee(E_ID),
--- 	P_ID 	 VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
--- 	PRIMARY KEY(P_ID,E_ID)
--- )
+CREATE TABLE Contribute(
+	Amount_of_money	 INT  NOT NULL,
+	G_ID     VARCHAR(15)  NOT NULL    REFERENCES Guest(G_ID),
+	E_ID     VARCHAR(15)  NOT NULL    REFERENCES Employee(E_ID),
+	PRIMARY KEY(G_ID,E_ID)
+);
+CREATE TABLE Notify(
+	E_ID     VARCHAR(15)    NOT NULL   REFERENCES Employee(E_ID),
+	P_ID 	 VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
+	PRIMARY KEY(P_ID,E_ID)
+);
+CREATE TABLE Control(
+	E_ID     VARCHAR(15)    NOT NULL REFERENCES Employee(E_ID),
+	HE_ID 	 VARCHAR(15)    NOT NULL   REFERENCES Hospital_equipment(HE_ID),
+	PRIMARY KEY(HE_ID,E_ID)
+);
+
 
 INSERT INTO Patient VALUES
 ('Alice', 'Nemartyanova', 'Russia', '12/08/00', 'terapevt', '200', 'female', 'not', 'Apat'),
@@ -160,6 +161,7 @@ INSERT INTO Make_an_appointment VALUES
 ('Apat','1BT','2018-12-20');
 
 
+-- 1
 SELECT * FROM Employee as d INNER JOIN  Make_an_appointment as m
 ON m.E_ID = d.E_ID and m.P_ID = 'Apat'
 WHERE
@@ -171,6 +173,48 @@ and (d.name NOT LIKE 'L%' and d.name NOT LIKE 'M%'))
 or ((d.name LIKE 'L%' or d.name LIKE 'M%')
 and (d.surname NOT LIKE 'L%' and d.surname NOT LIKE 'M%'));
 
+
+-- 2
+SELECT e.E_ID, Count(e.E_ID) AS TOTAL, COUNT(e.E_ID)/56.0 as AVERAGE
+FROM Employee as e INNER JOIN  Make_an_appointment as m
+ON m.E_ID = e.E_ID 
+WHERE
+m.date > current_date - interval '1 year'
+GROUP BY e.E_ID
+
+
+-- 3
+SELECT M.P_ID
+FROM patient as p INNER JOIN  Make_an_appointment as m
+ON m.P_ID = P.P_ID 
+WHERE
+Date > current_date - interval '1 week'
+GROUP By M.P_ID
+HAVING Count(M.P_ID)>1
+INTERSECT
+SELECT M.P_ID
+FROM patient as p INNER JOIN  Make_an_appointment as m
+ON m.P_ID = P.P_ID 
+WHERE
+Date > current_date - interval '2 week' and date < CURRENT_DATE - INTERVAL '1 week'
+GROUP By M.P_ID
+HAVING Count(M.P_ID)>1
+INTERSECT
+SELECT M.P_ID
+FROM patient as p INNER JOIN  Make_an_appointment as m
+ON m.P_ID = P.P_ID 
+WHERE
+Date > current_date - interval '1 week'
+GROUP By M.P_ID
+HAVING Count(M.P_ID)>1
+INTERSECT
+SELECT M.P_ID
+FROM patient as p INNER JOIN  Make_an_appointment as m
+ON m.P_ID = P.P_ID 
+WHERE
+Date > current_date - interval '2 week' and date < CURRENT_DATE - INTERVAL '1 week'
+GROUP By M.P_ID
+HAVING Count(M.P_ID)>1
 
 
 --script
