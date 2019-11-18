@@ -44,6 +44,7 @@ CREATE TABLE Stuff_schedule(
 CREATE TABLE Hospital_equipment(
   HE_ID  VARCHAR(15)   NOT NULL  PRIMARY KEY
 );
+
 CREATE TABLE Patient(
   Name      VARCHAR(30)   NOT NULL,
   Surname      VARCHAR(30)   NOT NULL,
@@ -80,7 +81,6 @@ CREATE TABLE Canteen_menu(
   E_ID     VARCHAR(15)  REFERENCES Employee(E_ID),
   PRIMARY KEY(Type,E_ID)
 );
-
 
 
 CREATE TABLE Donate(
@@ -125,20 +125,23 @@ INSERT INTO Employee VALUES
 
 INSERT INTO Patient  VALUES
 ('Alice', 'Nemartyanova', 'Russia', '12/08/2000', 'terapevt', '200', 'female', 'not', 'Apat');
-<<<<<<< HEAD
+
+INSERT INTO Patient VALUES
+('Alice', 'Nemartyanova', 'Russia', '12/08/00', 'terapevt', '200', 'female', 'not', 'Apat'),
+('Zhandos', 'Kip', 'Kazakhstan', '23/11/00', 'terapevt', '200', 'male', 'not', 'Zpat');
+
+INSERT INTO Make_an_appointment VALUES
+('Apat','2AM','2008-03-20'),
+('Apat','3SK','2018-11-18'),
+('Zpat','1BT','2018-11-25'),
+('Zpat','2AM','2019-09-20'),
+('Apat','1BT','2018-12-20');
 
 INSERT INTO Employee VALUES
 ('Llice', 'Martyanova', 'Ne znau', '12/05/00', '43254523324', 'alicem@gmail.com', 'WELL', 'ktk', 'Doctor', '2AM'),
 ('Mhamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOX', 'kek', 'Doctor', '3SK'),
 ('Mekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'Doctor', 'Doctor', '1BT');
 
-=======
-INSERT INTO Employee VALUES
-('Llice', 'Martyanova', 'Ne znau', '12/05/00', '43254523324', 'alicem@gmail.com', 'WELL', 'ktk', 'Doctor', '2AM'),
-('Mhamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOX', 'kek', 'Doctor', '3SK'),
-('Mekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'Doctor', 'Doctor', '1BT');
-
->>>>>>> a4119416c5173fb97d6e196f4e1a90480480d2d5
 INSERT INTO Make_an_appointment VALUES
 ('Apat','2AM','2008-03-20'),
 ('Apat','3SK','2008-03-20');
