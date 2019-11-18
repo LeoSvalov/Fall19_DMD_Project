@@ -12,6 +12,7 @@ DROP TABLE Get;
 DROP TABLE Make_an_appointment;
 DROP TABLE Employee;
 -- asdasdwd
+-- asdasd
 CREATE TABLE Employee (
 	Name      	  VARCHAR(30)   NOT NULL,
 	Surname       VARCHAR(30)   NOT NULL,   
