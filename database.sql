@@ -106,15 +106,10 @@ CREATE TABLE Make_an_appointment(
 	Date DATE 		    NOT NULL,
 	PRIMARY KEY(P_ID,E_ID)
 );
-<<<<<<< HEAD
 	INSERT INTO Hospital_equipment VALUES
 	('qwe'),
 	('rewt'),
 	('feww');
-
-
---shoma loh 
-=======
 
 CREATE TABLE Negotiate_a_purchase(
 	Supply_manager		VARCHAR(30)		REFERENCES Employee(E_ID),
@@ -124,38 +119,3 @@ CREATE TABLE Negotiate_a_purchase(
 );
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> 4a8b123239eba95fd1e932c9e4e26814647c1e92
