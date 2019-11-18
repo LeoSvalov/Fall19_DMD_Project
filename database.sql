@@ -1,15 +1,16 @@
 DROP TABLE Notice_board;
 DROP TABLE Stuff_schedule;
-DROP TABLE Hospital_equipment;
 DROP TABLE Medical_history;
-DROP TABLE Optional_treatment;
 DROP TABLE Guest;
 DROP TABLE Canteen_menu;
-DROP TABLE Patient;
 DROP TABLE Donate;
 DROP TABLE Visit;
 DROP TABLE Get;
 DROP TABLE Make_an_appointment;
+DROP TABLE Negotiate_a_purchase;
+DROP TABLE Hospital_equipment;
+DROP TABLE Optional_treatment;
+DROP TABLE Patient;
 DROP TABLE Employee;
 
 
@@ -26,7 +27,7 @@ CREATE TABLE Employee (
   E_ID          VARCHAR(15)   NOT NULL  PRIMARY KEY
 );
 
-CREATE TABLE Noticeboard(
+CREATE TABLE Notice_board(
   News            VARCHAR(1000),
   Upcoming_events   VARCHAR(1000),
   Date              DATE          NOT NULL,
@@ -123,28 +124,14 @@ INSERT INTO Employee VALUES
 ('Shamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOX', 'kek', 'Cleaning', '3SK'),
 ('Bekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'ftna', 'Doctor', '1BT');
 
-INSERT INTO Patient  VALUES
-('Alice', 'Nemartyanova', 'Russia', '12/08/2000', 'terapevt', '200', 'female', 'not', 'Apat');
-
 INSERT INTO Patient VALUES
 ('Alice', 'Nemartyanova', 'Russia', '12/08/00', 'terapevt', '200', 'female', 'not', 'Apat'),
 ('Zhandos', 'Kip', 'Kazakhstan', '23/11/00', 'terapevt', '200', 'male', 'not', 'Zpat');
 
-INSERT INTO Make_an_appointment VALUES
-('Apat','2AM','2008-03-20'),
-('Apat','3SK','2018-11-18'),
-('Zpat','1BT','2018-11-25'),
-('Zpat','2AM','2019-09-20'),
-('Apat','1BT','2018-12-20');
-
 INSERT INTO Employee VALUES
-('Llice', 'Martyanova', 'Ne znau', '12/05/00', '43254523324', 'alicem@gmail.com', 'WELL', 'ktk', 'Doctor', '2AM'),
-('Mhamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOX', 'kek', 'Doctor', '3SK'),
-('Mekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'Doctor', 'Doctor', '1BT');
-
-INSERT INTO Make_an_appointment VALUES
-('Apat','2AM','2008-03-20'),
-('Apat','3SK','2008-03-20');
+('Llice', 'Martyanova', 'Ne znau', '12/05/00', '43254523324', 'alicem@gmail.com', 'WELL', 'ktk', 'Doctor', '2RM'),
+('Mhamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOX', 'kek', 'Doctor', 'GK'),
+('Mekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'Doctor', 'Doctor', '1B');
 
 
 --script
