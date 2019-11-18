@@ -1,8 +1,23 @@
+DROP TABLE Notice_board;
+DROP TABLE Stuff_schedule;
+DROP TABLE Hospital_equipment;
+DROP TABLE Medical_history;
+DROP TABLE Optional_treatment;
+DROP TABLE Guest;
+DROP TABLE Canteen_menu;
+DROP TABLE Patient;
+DROP TABLE Donate;
+DROP TABLE Visit;
+DROP TABLE Get;
+DROP TABLE Make_an_appointment;
+DROP TABLE Employee;
+
+
 CREATE TABLE Employee (
 
 	Fullname      VARCHAR(30)   NOT NULL,   
 	Address       VARCHAR(30)   NOT NULL,
-	Dob           VARCHAR(15)   NOT NULL,
+	DoB           VARCHAR(15)   NOT NULL,
 	Phone         VARCHAR(12)   NOT NULL,
 	Email         VARCHAR(30)   NOT NULL,
 	Qualification VARCHAR(20)   NOT NULL,
@@ -13,16 +28,16 @@ CREATE TABLE Employee (
 	PRIMARY KEY (E_id)
 );
 
-CREATE TABLE Noticeboard(
+CREATE TABLE Notice_board(
 	News	          VARCHAR(1000),
 	Upcoming_events   VARCHAR(1000),
 	Date              DATE          NOT NULL,
 	E_id 	          VARCHAR(15)   REFERENCES Employee(E_id),
-	PRIMARY KEY(Date,E_id),
+	PRIMARY KEY(Date,E_id)
 );
 
 CREATE TABLE Stuff_schedule(
-	Shedule  VARCHAR(1000)  NOT NULL,
+	Schedule  VARCHAR(1000)  NOT NULL,
 	Date      DATE          NOT NULL,
 	E_id 	  VARCHAR(15)   REFERENCES Employee(E_id),
 	PRIMARY KEY(Date,E_id)
@@ -34,7 +49,7 @@ CREATE TABLE Hospital_equipment(
 );
 
 CREATE TABLE Medical_history(
-	Ilness 			 VARCHAR(30)   NOT NULL,
+	Illness 			 VARCHAR(30)   NOT NULL,
 	Duration		 VARCHAR(50)   NOT NULL,
 	Attending_doctor VARCHAR(30)   NOT NULL,
 	P_id 			 VARCHAR(15)   NOT NULL,
