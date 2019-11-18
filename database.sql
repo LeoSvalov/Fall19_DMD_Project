@@ -115,3 +115,6 @@ CREATE TABLE Make_an_appointment(
 	('qwe'),
 	('rewt'),
 	('feww');
+
+
+--shoma loh 
