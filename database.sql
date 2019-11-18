@@ -25,6 +25,17 @@ CREATE TABLE Employee (
 	E_ID          VARCHAR(15)   NOT NULL	PRIMARY KEY
 );
 
+CREATE TABLE Patient(
+	Fullname      VARCHAR(30)   NOT NULL,
+	Address       VARCHAR(30)   NOT NULL,
+	Dob           VARCHAR(15)   NOT NULL,
+	Ward_type     VARCHAR(12)   NOT NULL,
+	Room_num 	  VARCHAR(20)   NOT NULL,
+	Sex      	  VARCHAR(15)   NOT NULL,
+	Type          VARCHAR(15)   NOT NULL,
+	P_ID          VARCHAR(15)   NOT NULL	PRIMARY KEY
+);
+
 CREATE TABLE Noticeboard(
 	News	          VARCHAR(1000),
 	Upcoming_events   VARCHAR(1000),
@@ -49,7 +60,7 @@ CREATE TABLE Medical_history(
 	Ilness 			 VARCHAR(30)   NOT NULL,
 	Duration		 VARCHAR(50)   NOT NULL,
 	Attending_doctor VARCHAR(30)   NOT NULL,
-	P_ID 			 VARCHAR(15)   NOT NULL		REFERENCES Patient(P_ID),
+	P_ID 			 VARCHAR(15)   NOT NULL		REFERENCES Patient(P_ID)
 );
 
 CREATE TABLE Optional_treatment(
@@ -67,17 +78,6 @@ CREATE TABLE Canteen_menu(
 	Type      VARCHAR(15)   NOT NULL,
 	E_ID 	  VARCHAR(15)	REFERENCES Employee(E_ID),
 	PRIMARY KEY(Type,E_ID)
-);
-
-CREATE TABLE Patient(
-	Fullname      VARCHAR(30)   NOT NULL,
-	Address       VARCHAR(30)   NOT NULL,
-	Dob           VARCHAR(15)   NOT NULL,
-	Ward_type     VARCHAR(12)   NOT NULL,
-	Room_num 	  VARCHAR(20)   NOT NULL,
-	Sex      	  VARCHAR(15)   NOT NULL,
-	Type          VARCHAR(15)   NOT NULL,
-	P_ID          VARCHAR(15)   NOT NULL	PRIMARY KEY
 );
 
 CREATE TABLE Donate(
@@ -106,10 +106,6 @@ CREATE TABLE Make_an_appointment(
 	Date DATE 		    NOT NULL,
 	PRIMARY KEY(P_ID,E_ID)
 );
-	INSERT INTO Hospital_equipment VALUES
-	('qwe'),
-	('rewt'),
-	('feww');
 
 CREATE TABLE Negotiate_a_purchase(
 	Supply_manager		VARCHAR(30)		REFERENCES Employee(E_ID),
@@ -117,5 +113,42 @@ CREATE TABLE Negotiate_a_purchase(
 	HE_ID		  		VARCHAR(15)		REFERENCES Hospital_equipment(HE_ID),
 	NP_ID				VARCHAR(30)		PRIMARY KEY
 );
+
+
+
+INSERT INTO Employee VALUES
+('Alice', 'Martyanova', 'Ne znau', '12/05/00', '43254523324', 'alicem@gmail.com', 'WELL', 'ktk', 'Nurse', '2AM'),
+('Shamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOX', 'kek', 'Cleaning', '3SK'),
+('Bekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhantalgat01@gmail.com', 'GOOD', 'ftna', 'Doctor', '1BT');
+
+
+
+--asdasdasdas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
