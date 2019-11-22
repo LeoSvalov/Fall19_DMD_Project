@@ -1,40 +1,26 @@
-DROP TABLE Notice_board;
-DROP TABLE Stuff_schedule;
-DROP TABLE Medical_history;
-DROP TABLE Canteen_menu;
-DROP TABLE Donate;
-DROP TABLE Visit;
-DROP TABLE Get;
-DROP TABLE Make_an_appointment;
-DROP TABLE Contribute; 
-DROP TABLE Notify;
-DROP TABLE Control;
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 -- tables to be done:
 -- DROP TABLE Create_Report; --
 -- DROP TABLE Assign; --
 -- DROP TABLE Receive; --
 -- DROP TABLE Conclude agreement; --
-DROP TABLE Guest;
-DROP TABLE Negotiate_a_purchase;
-DROP TABLE Hospital_equipment;
-DROP TABLE Optional_treatment;
-DROP TABLE Patient;
-DROP TABLE Employee;
 
 -- решить вопрос с fill in и medical history!
-
+-- var
 CREATE TABLE Employee (
   Name          VARCHAR(30)   NOT NULL,
   Surname       VARCHAR(30)   NOT NULL,   
   Address       VARCHAR(30)   NOT NULL,
-  Dob           VARCHAR(15)   NOT NULL,
+  DoB           VARCHAR(15)   NOT NULL,
   Phone         VARCHAR(12)   NOT NULL,
   Email         VARCHAR(30)   NOT NULL,
   Qualification VARCHAR(20)   NOT NULL,
   Type          VARCHAR(15)   NOT NULL,
   E_ID          VARCHAR(15)   NOT NULL  PRIMARY KEY
 );
-
+-- 2
 CREATE TABLE Notice_board(
   News            VARCHAR(1000),
   Upcoming_events   VARCHAR(1000),
@@ -42,30 +28,30 @@ CREATE TABLE Notice_board(
   E_ID             VARCHAR(15)   REFERENCES Employee(E_ID),
   PRIMARY KEY(Date,E_ID)
 );
-
+-- 2
 CREATE TABLE Stuff_schedule(
   Schedule   VARCHAR(1000)  NOT NULL,
   Date      DATE           NOT NULL,
   E_ID     VARCHAR(15)    REFERENCES Employee(E_ID),
   PRIMARY KEY(Date,E_ID)
 );
-
+-- 5
 CREATE TABLE Hospital_equipment(
   HE_ID  VARCHAR(15)   NOT NULL  PRIMARY KEY
 );
-
+-- var
 CREATE TABLE Patient(
   Name      VARCHAR(30)   NOT NULL,
   Surname      VARCHAR(30)   NOT NULL,
   Address       VARCHAR(30)   NOT NULL,
-  Dob           VARCHAR(15)   NOT NULL,
+  Dob           Date  NOT NULL,
   Ward_type     VARCHAR(12),
   Room_num     VARCHAR(20),
   Sex          VARCHAR(15)   NOT NULL,
   Type          VARCHAR(15)   NOT NULL,
   P_ID          VARCHAR(15)   NOT NULL  PRIMARY KEY
 );
-
+-- 10
 CREATE TABLE Medical_history(
   Illness        VARCHAR(30)   NOT NULL,
   Duration     VARCHAR(50)   NOT NULL,
@@ -73,49 +59,48 @@ CREATE TABLE Medical_history(
   E_ID        VARCHAR(15)   REFERENCES Employee(E_ID),
   P_ID        VARCHAR(15)   NOT NULL    REFERENCES Patient(P_ID)
 );
-
+-- 5
 CREATE TABLE Optional_treatment(
   Duration VARCHAR(30)   NOT NULL,
   Price    INT           NOT NULL,
   T_id   VARCHAR(15)     NOT NULL    PRIMARY KEY
 );
-
+-- 5
 CREATE TABLE Guest(
   Name VARCHAR(30)   NOT NULL,
   G_ID VARCHAR(15)   NOT NULL    PRIMARY KEY
 );
-
+-- 3
 CREATE TABLE Canteen_menu(
   Type      VARCHAR(15)   NOT NULL,
   E_ID      VARCHAR(15)  REFERENCES Employee(E_ID),
   PRIMARY KEY(Type,E_ID)
 );
-
-
+-- 3
 CREATE TABLE Donate(
   P_ID VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
   E_ID VARCHAR(15)    NOT NULL  REFERENCES Employee(E_ID),
   Amount_of_money INT NOT NULL,
   PRIMARY KEY(P_ID,E_ID)
 );
-
+-- 3
 CREATE TABLE Visit(
   P_ID VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
   E_ID VARCHAR(15)    NOT NULL  REFERENCES Employee(E_ID),
   Time timestamp      NOT NULL, 
   PRIMARY KEY(P_ID,E_ID,Time)
 );
-
+-- 1
 CREATE TABLE Get(
   P_ID VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
   T_ID VARCHAR(15)    NOT NULL  REFERENCES Optional_treatment(T_ID),
   PRIMARY KEY(P_ID,T_ID)
 );
-
+-- var
 CREATE TABLE Make_an_appointment(
   P_ID VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
   E_ID VARCHAR(15)    NOT NULL  REFERENCES Employee(E_ID),
-  Date DATE           NOT NULL,
+  Date timestamp           NOT NULL,
   PRIMARY KEY(P_ID,E_ID)
 );
 
@@ -143,78 +128,6 @@ CREATE TABLE Control(
 	PRIMARY KEY(HE_ID,E_ID)
 );
 
-
-INSERT INTO Patient VALUES
-('Alice', 'Nemartyanova', 'Russia', '12/08/00', 'terapevt', '200', 'female', 'not', 'Apat'),
-('Zhandos', 'Kip', 'Kazakhstan', '23/11/00', 'terapevt', '200', 'male', 'not', 'Zpat');
-
-INSERT INTO Employee VALUES
-('Alice', 'Martyanova', 'Ne znau', '12/05/00', '43254523324', 'alicem@gmail.com', 'WELL', 'Nurse', '2AM'),
-('Shamil', 'Khastiev', 'Kazan', '23/11/00', '89064675162', 'shamilk@gmail.com', 'LOL', 'Cleaning', '3SK'),
-('M sekzhan', 'Talgat', 'Ayagoz', '03/02/01', '89047611375', 'bekzhant@gmail.com', 'GOOD', 'Doctor', '1BT');
-
-INSERT INTO Make_an_appointment VALUES
-('Apat','2AM','2008-03-20'),
-('Apat','3SK','2018-11-18'),
-('Zpat','1BT','2018-11-25'),
-('Zpat','2AM','2019-09-20'),
-('Apat','1BT','2018-12-20');
-
-
--- 1
-SELECT * FROM Employee as d INNER JOIN  Make_an_appointment as m
-ON m.E_ID = d.E_ID and m.P_ID = 'Apat'
-WHERE
-m.Date = (SELECT MAX(Date) FROM Make_an_appointment
-WHERE Make_an_appointment.P_ID = 'Apat') 
-and d.type = 'Doctor' 
-and ((d.surname LIKE 'L%' or d.surname LIKE 'M%' ) 
-and (d.name NOT LIKE 'L%' and d.name NOT LIKE 'M%'))
-or ((d.name LIKE 'L%' or d.name LIKE 'M%')
-and (d.surname NOT LIKE 'L%' and d.surname NOT LIKE 'M%'));
-
-
--- 2
-SELECT e.E_ID, Count(e.E_ID) AS TOTAL, COUNT(e.E_ID)/56.0 as AVERAGE
-FROM Employee as e INNER JOIN  Make_an_appointment as m
-ON m.E_ID = e.E_ID 
-WHERE
-m.date > current_date - interval '1 year'
-GROUP BY e.E_ID
-
-
--- 3
-SELECT M.P_ID
-FROM patient as p INNER JOIN  Make_an_appointment as m
-ON m.P_ID = P.P_ID 
-WHERE
-Date > current_date - interval '1 week'
-GROUP By M.P_ID
-HAVING Count(M.P_ID)>1
-INTERSECT
-SELECT M.P_ID
-FROM patient as p INNER JOIN  Make_an_appointment as m
-ON m.P_ID = P.P_ID 
-WHERE
-Date > current_date - interval '2 week' and date < CURRENT_DATE - INTERVAL '1 week'
-GROUP By M.P_ID
-HAVING Count(M.P_ID)>1
-INTERSECT
-SELECT M.P_ID
-FROM patient as p INNER JOIN  Make_an_appointment as m
-ON m.P_ID = P.P_ID 
-WHERE
-Date > current_date - interval '1 week'
-GROUP By M.P_ID
-HAVING Count(M.P_ID)>1
-INTERSECT
-SELECT M.P_ID
-FROM patient as p INNER JOIN  Make_an_appointment as m
-ON m.P_ID = P.P_ID 
-WHERE
-Date > current_date - interval '2 week' and date < CURRENT_DATE - INTERVAL '1 week'
-GROUP By M.P_ID
-HAVING Count(M.P_ID)>1
 
 
 --script
