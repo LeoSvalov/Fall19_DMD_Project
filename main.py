@@ -1,112 +1,163 @@
 import random
 from random import randrange
-from datetime import timedelta
-from datetime import datetime
+import psycopg2
 import string
 from faker import Faker
+faker = Faker('en_US')
 
+# print("-------------------------------------------")
+# print("Welcome to the hospital database interface!")
+# print("-------------------------------------------")
+# print("")
+print("Please, input some needed amounts for our system:")
+print("     Amount of employees:")
+employee_amount = int(input())
+print("     Amount of patients:")
+patient_amount = int(input())
+print("     Amount of guests:")
+guest_amount = int(input())
+print("     Amount of treatments:")
+treatment_amount = int(input())
+print("     Amount of hospital equipments:")
+hospital_equipment_amount = int(input())
+print("     Amount of appoinments between the particular doctor and the particular patient:")
+appointment_amount = int(input())
+# print("Thanks!")
+qualifications = ["high", "mid", "low"]
+types_of_employee = ["Nurse", "Doctor", "Economic Manager", "Supply Manager", "Receprionist"]
+ward_types_of_hospital = ["terapevt", "lor", "hor", "mor", "dor"]
+canteen_menu_types = ["vegan", "non vegan"]
+used_id = []
 
-faker = Faker()
-filename = "database.sql"
-E_IDs = []
-P_IDs = []
+def generating_IDS(flag):
+    ids =  []
+    if flag == "E": 
+        for i in range(employee_amount): ids.append('E-' + str(i+1) ) 
+    elif flag == "P":
+        for i in range(patient_amount): ids.append('P-' + str(i+1)) 
+    elif flag == "G":    
+        for i in range(guest_amount): ids.append('G-' + str(i+1)) 
+    elif flag == "HE":
+        for i in range(hospital_equipment_amount): ids.append('HE-' + str(i+1)) 
+    elif flag == "T":
+        for i in range(treatment_amount): ids.append('T-' + str(i+1)) 
+    return ids
+E_IDs = generating_IDS("E")  #employees ids
+P_IDs = generating_IDS("P")  #patients ids
+HE_IDs = generating_IDS("HE") #hospital equipment ids
+T_IDs = generating_IDS("T")  #treatment ids
+G_IDs = generating_IDS("G") #guests ids
 
-def delete_old(filename: str):
-    f = open(filename, "r")
-    lines = f.readlines()
-    f.close()
-    f = open(filename, "w")
-    for line in lines:
-        f.write(line)
-        if line.startswith("--script"):
-            break
-    f.close()
-def fill_employee(filename: str):
-    qualifications = ["high", "mid", "low"]
-    types = ["Nurse", "Doctor", "Economic Manager", "Supply Manager", "Receprionist"]
-    number_of_records = 5
-    f = open(filename, "a")
-    query = "INSERT INTO Employee VALUES\n"
-    for i in range(number_of_records):
-        query += "("
-        query = query + "'" + random.choice(names) + "'," #name
-        query = query + "'" + random.choice(surnames) + "'," #surname
-        query = query + "'" + random.choice(cities) + "'," #city
-        query = query + "'" + random_date() + "'," #date of birth
-        query = query + "'" + "8" + str(random.randrange(1000000000, 9999999999)) + "'," #phone number
-        query = query + "'" + random_string(10)+"@gmail.com" + "'," #email
-        query = query + "'" + random.choice(qualifications) + "'," #qualification
-        query = query + "'" + random.choice(types) + "'," #type
-        query = query + "'" + random_id(E_IDs) + "'" #id
-        query += ")"
-        if (i < number_of_records-1):
-            query += ',\n'
-        else:
-            query += ';\n'
-    print(query)
-    f.write(query)
-    f.write("\n")
-def fill_patient(filename: str):
-    ward_types = ["terapevt", "lor", "hor", "mor", "dor"]
-    number_of_records = 5
-    f = open(filename, "a")
-    query = "INSERT INTO Patient VALUES\n"
-    for i in range(number_of_records):
-        query += "("
-        query = query + "'" + random.choice(names) + "'," #name
-        query = query + "'" + random.choice(surnames) + "'," #surname
-        query = query + "'" + random.choice(cities) + "'," #city
-        query = query + "'" + random_date() + "'," #date of birth
-        query = query + "'" + random.choice(ward_types) + "',"  #ward type
-        query = query + "'" + str(random.randrange(100, 300)) + "'," #room
-        query = query + "'" + random.choice(["male", "female"]) + "',"  #sex
-        query = query + "'" + random.choice(["stat", "ambul"]) + "',"  #type
-        query = query + "'" + random_id(P_IDs) + "'" #id
-        query += ")"
-        if (i < number_of_records-1):
-            query += ',\n'
-        else:
-            query += ';\n'
-    print(query)
-    f.write(query)
-    f.write("\n")
-def fill_Make_an_appointment(filename: str):
-    number_of_records = 5
-    f = open(filename, "a")
-    query = "INSERT INTO Patient VALUES\n"
-    for i in range(number_of_records):
-        query += "("
-        query = query + "'" + random.choice(P_IDs) + "'," #Patient
-        query = query + "'" + random.choice(E_IDs) + "'," #Employee
-        query = query + "'" + random_date() + "'" #Date
-        query += ")"
-        if (i < number_of_records-1):
-            query += ',\n'
-        else:
-            query += ';\n'
-    print(query)
-    f.write(query)
-    f.write("\n")
-def random_date():
-    start = datetime.strptime('1/1/2009', '%d/%m/%Y')
-    end = datetime.strptime('1/1/2019', '%d/%m/%Y')
-    delta = end - start
-    random_days = randrange(delta.days)
-    return (start + timedelta(days=random_days)).strftime('%d/%m/%y')
-def random_id(ids: list):
-    id = random_string(15)
-    while (id in ids):
-        id = random_string(15)
-    ids.append(id)
+def random_id(ids):
+    id = random.choice(ids)
+    while (id in used_id):
+        id = random.choice(ids)
+    used_id.append(id)
     return id
-def random_string(l: int):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(l))
-# delete_old(filename)
-# fill_patient(filename)
-# fill_employee(filename)
-# fill_Make_an_appointment(filename)
-import psycopg2
+def insert_employee():
+    s = "INSERT INTO Employee VALUES\n"
+    for i in range(employee_amount):
+        s += "("
+        s = s + "'" + faker.first_name() + "'," #name
+        s = s + "'" + faker.last_name() + "'," #surname
+        s = s + "'" + faker.address().replace("\n"," ") + "',"
+        s = s + "'" + str(faker.date_of_birth()) + "'," #date of birth
+        s = s + "'" + faker.phone_number() + "'," #phone number
+        s = s + "'" + faker.email() + "'," #email
+        s = s + "'" + random.choice(qualifications) + "'," #qualification
+        s = s + "'" + random.choice(types_of_employee) + "'," #type
+        s = s + "'" + random_id(E_IDs) + "'" #id
+        s += ")"
+        if (i < employee_amount-1):
+            s += ',\n'
+        else:
+            s += ';\n'
+    # print(s)
+    return s
+def insert_patient():
+    s = "INSERT INTO Patient VALUES\n"
+    for i in range(patient_amount):
+        s += "("
+        s = s + "'" + faker.first_name() + "'," #name
+        s = s + "'" + faker.last_name() + "'," #surname
+        s = s + "'" + faker.address().replace("\n"," ") + "'," #city
+        s = s + "'" + str(faker.date_of_birth()) + "'," #date of birth
+        s = s + "'" + random.choice(ward_types_of_hospital) + "',"  #ward type
+        s = s + "'" + str(random.randrange(100, 500)) + "'," #room
+        s = s + "'" + random.choice(["male", "female"]) + "',"  #sex
+        s = s + "'" + random.choice(["stat", "ambul"]) + "',"  #type
+        s = s + "'" + random_id(P_IDs) + "'" #id
+        s += ")"
+        if (i < patient_amount-1):
+            s += ',\n'
+        else:
+            s += ';\n'
+    # print(s)
+    return s
+def insert_guest():
+    s = "INSERT INTO Guest VALUES\n"
+    for i in range(guest_amount):
+        s += "("
+        s = s + "'" + faker.name() + "'," #name
+        s = s + "'" + random_id(P_IDs) + "'" #id
+        s += ")"
+        if (i < guest_amount-1):
+            s += ',\n'
+        else:
+            s += ';\n'
+    # print(s)
+    return s    
+def insert_make_appointment():
+    s = "INSERT INTO Make_an_appointment VALUES\n"
+    for i in range(appointment_amount):
+        s += "("
+        s = s + "'" + random.choice(P_IDs) + "'," #Patient
+        s = s + "'" + random.choice(E_IDs) + "'," #Employee
+        s = s + "'" + str(faker.date_time_this_decade()) + "'" #Date
+        s += ")"
+        if (i < appointment_amount-1):
+            s += ',\n'
+        else:
+            s += ';\n'
+    # print(s)
+    return s
+def insert_canteen():
+    s = "INSERT INTO Canteen_menu VALUES\n"
+
+    for i in range(guest_amount):
+        s += "("
+        s = s + "'" + random.choice(canteen_menu_types) + "'," #name
+        s = s + "'" + random.choice(E_IDs) + "'" #id
+        s += ")"
+        if (i < guest_amount-1):
+            s += ',\n'
+        else:
+            s += ';\n'
+    # print(s)
+    return s
+def insert_donate():
+    number_of_records = 3
+    s = "INSERT INTO Donate VALUES\n"
+    for i in range(number_of_records):
+        s += "("
+        s = s + "'" + random.choice(P_IDs) + "'," #pid
+        s = s + "'" + random.choice(E_IDs) + "'," #eid
+        s = s + "'" + str(random.randrange(10, 1000000)) + "'" #amount of money
+        s += ")"
+        if (i < number_of_records-1):
+            s += ',\n'
+        else:
+            s += ';\n'
+    # print(s)
+    return s         
+
+
+
+patient_insert = insert_patient()
+employee_insert =  insert_employee()
+make_appointment  = insert_make_appointment()
+
+
 con = psycopg2.connect(database="dmd_project", user="postgres", password="12345", host="127.0.0.1", port="5432")
 print("Database opened successfully")
 cur = con.cursor()
@@ -137,23 +188,23 @@ insert ="""
 
 
             INSERT INTO Make_an_appointment VALUES
-            ('Apat','2AM','2008-03-20'),
-            ('Apat','3SK','2019-11-18'),
-            ('Zpat','1BT','2018-11-25'),
-            ('Zpat','3SK','2018-09-20'),
-            ('Zhpat','3SK','2018-09-20'),
-            ('Apat','1BT','2018-12-20'),
-            ('Lpat','3SK','2019-11-19'),
-            ('Lpat','1BT','2019-11-18'),
-            ('Lpat','2AM','2019-11-13'),
-            ('Lpat','2BT','2019-11-10'),
-            ('Lpat','3BT','2019-11-07'),
-            ('Lpat','4BT','2019-11-05'),
-            ('Lpat','5BT','2019-11-01'),
-            ('Lpat','6BT','2019-10-30'),
-            ('Lpat','7BT','2019-10-28'),
-            ('Lpat','8BT','2019-10-23'),
-            ('Lpat','9BT','2019-10-21');
+            ('Apat','2AM','2008-03-20 06:00:00'),
+            ('Apat','3SK','2019-11-18 06:00:00'),
+            ('Zpat','1BT','2018-11-25 06:00:00'),
+            ('Zpat','3SK','2018-09-20 06:00:00'),
+            ('Zhpat','3SK','2018-09-20 06:00:00'),
+            ('Apat','1BT','2018-12-20 06:00:00'),
+            ('Lpat','3SK','2019-11-19 06:00:00'),
+            ('Lpat','1BT','2019-11-18 06:00:00'),
+            ('Lpat','2AM','2019-11-13 06:00:00'),
+            ('Lpat','2BT','2019-11-10 06:00:00'),
+            ('Lpat','3BT','2019-11-07 06:00:00'),
+            ('Lpat','4BT','2019-11-05 06:00:00'),
+            ('Lpat','5BT','2019-11-01 06:00:00'),
+            ('Lpat','6BT','2019-10-30 06:00:00'),
+            ('Lpat','7BT','2019-10-28 06:00:00'),
+            ('Lpat','8BT','2019-10-23 06:00:00'),
+            ('Lpat','9BT','2019-10-21 06:00:00');
         """
 query = "SELECT * FROM Patient"
 query1 =""" SELECT * FROM Employee as d INNER JOIN  Make_an_appointment as m

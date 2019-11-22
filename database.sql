@@ -101,15 +101,15 @@ CREATE TABLE Make_an_appointment(
   P_ID VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
   E_ID VARCHAR(15)    NOT NULL  REFERENCES Employee(E_ID),
   Date timestamp           NOT NULL,
-  PRIMARY KEY(P_ID,E_ID)
+  PRIMARY KEY(P_ID,E_ID,Date)
 );
 
-CREATE TABLE Negotiate_a_purchase(
-  Supply_manager    VARCHAR(30)    REFERENCES Employee(E_ID),
-  Economic_manager  VARCHAR(30)    REFERENCES Employee(E_ID),
-  HE_ID          VARCHAR(15)    REFERENCES Hospital_equipment(HE_ID),
-  NP_ID        VARCHAR(30)    PRIMARY KEY
-);
+-- CREATE TABLE Negotiate_a_purchase(
+--   Supply_manager    VARCHAR(30)    REFERENCES Employee(E_ID),
+--   Economic_manager  VARCHAR(30)    REFERENCES Employee(E_ID),
+--   HE_ID          VARCHAR(15)    REFERENCES Hospital_equipment(HE_ID),
+--   NP_ID        VARCHAR(30)    PRIMARY KEY
+-- );
 
 CREATE TABLE Contribute(
 	Amount_of_money	 INT  NOT NULL,
