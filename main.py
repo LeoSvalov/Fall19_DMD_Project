@@ -4,68 +4,20 @@ import psycopg2
 import string
 from faker import Faker
 faker = Faker('en_US')
+from queries import * 
 
-print("-------------------------------------------")
-print("Welcome to the hospital database interface!")
-print("-------------------------------------------")
-print("")
-print("Please, input some needed amounts for our system:")
-print("     Amount of employees:")
-print("     (it should be >=5, as we should have at least 1 employee for each type: -doctor, -nurse, -supply manager, -economic manager, -receptionist)")
-employee_amount = int(input())
-while(employee_amount <5):
-    print("Sorry, give number of employees that is greater or equal 5! Input again:")
-    employee_amount = int(input())   
-doctor_amount = random.randint(1,employee_amount- 4)
-nurse_amount = random.randint(1,employee_amount - 3 - doctor_amount)
-supply_manager_amount = random.randint(1,employee_amount - 2 - doctor_amount - nurse_amount)
-economic_manager_amount = random.randint(1, employee_amount - supply_manager_amount  - doctor_amount - nurse_amount - 1)
-receptionist_amount = employee_amount - supply_manager_amount  - doctor_amount - nurse_amount - economic_manager_amount
-print("So, we have in total " + str(employee_amount) + " employees and randomly were decided that we have:" )
-print(str(doctor_amount) +" doctor(s), "  + str(nurse_amount) + " nurse(s), " + str(supply_manager_amount) + " supply_manager(s), " + str(economic_manager_amount) + " economic_manager(s), " + str(receptionist_amount) + " receptionist(s)")
-print("     Amount of patients:")
-print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
-patient_amount = int(input())
-while(patient_amount < 1):
-    print("Sorry, give number of patients that is greater or equal 1! Input again:")
-    patient_amount = int(input())
-print("     Amount of guests:")
-print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
-guest_amount = int(input())
-while(guest_amount < 1):
-    print("Sorry, give number of guests that is greater or equal 1! Input again:")
-    guest_amount = int(input())
-print("     Amount of treatments:")
-print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
-treatment_amount = int(input())
-while(treatment_amount < 1):
-    print("Sorry, give number of treatments that is greater or equal 1! Input again:")
-    treatment_amount = int(input())
-print("     Amount of hospital equipments:")
-print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
-hospital_equipment_amount = int(input())
-while(hospital_equipment_amount < 1):
-    print("Sorry, give number of hospital equipments that is greater or equal 1! Input again:")
-    hospital_equipment_amount = int(input())
-print("     Amount of appoinments between the particular doctor and the particular patient:")
-print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
-appointment_amount = int(input())
-while(appointment_amount < 1):
-    print("Sorry, give number of appointment_amount that is greater or equal 1! Input again:")
-    appointment_amount = int(input())
-print("Thanks!")
-print("-------------------------------------------------------------------------------")
-
-
-agreement_types = ["Confidentiallity", "Assurance", "Donor"]
-diagnosis = ["infection", "curing", "illness", "preparation to surgery", "virus", "injury"] #in real life should be extended, now only for insert table
-hospital_equipment_names = ["bandage", "brace", "cast", "catheter", "crutches", "defibrillator", "diagnostic equipment", "forceps", "incubator", "scalpel", "sling", "splint", "thermometer", "tongue depressor", "wheelchair", "X-ray"]
-treatments = ["Acne", "Allergy testing", "Arrhythmia", "Asthma", "Bariatric surgery","Barium enema", "Back pain", "Bladder cancer",  "Blood pressure test", "Bowel incontinence", "Breast lift", "Blurred vision", "Broken nose", "Breathlessness", "Cancer tests", "Cardiac electrophysiology", "Cataracts", "Cerebral palsy", "Cheek implants", "Colposcopy", "Coronary angioplasty", "Chest pain", "Coughing", "Depression", "Diabetes", "Diarrhoea", "Dysphagia", "Eczema", "Endometriosis", "Eyelid problems", "Facelift",  "Fibroids", "Foot pain", "Frozen shoulder", "Gastroscopy", "Glaucoma", "General medicine", "Hair loss", "Heartburn", "Herpes", "Hip pain", "Hydrocele", "Itchy skin", "Knee pain", "Liver disease", "Medical admission", "Night sweats", "Obesity", "Scoliosis", "Tongue tie", "Urology", "Radiotherapy"]
-qualifications = ["high", "medium", "intern"]
-types_of_employee = ["Nurse", "Doctor", "Economic Manager", "Supply Manager", "Receprionist"]
-ward_types_of_hospital = ["Emergency department", "Cardiology", "General Surgery", "Gynecology", "Critical Care", "Neurology", "Pain Management", "Physiotherapy", "Oncology"]
-schedule_examples = ["Do work related to patients","Do work related to your responsability zone"] # just examples to fill in table, can(and should) be much more detail
-notice_board_example = "Some important announcement! It will be done somehow at sometime with some activity in the our hospital!"
+employee_amount = 0 
+patient_amount = 0
+guest_amount = 0
+treatment_amount = 0
+hospital_equipment_amount = 0 
+appointment_amount = 0
+doctor_amount = 0
+nurse_amount = 0
+economic_manager_amount = 0
+supply_manager_amount = 0
+receptionist_amount = 0
+stationary_patient_amount = 0
 used_id = []
 doctors = []
 nurses  = []
@@ -74,10 +26,84 @@ economic_managers = []
 receptionists = []
 stationary_patients = []
 stat = []
-stationary_patient_amount = 0
+agreement_types = ["Confidentiallity", "Assurance", "Donor"]
+diagnosis = ["infection", "curing", "illness", "preparation to surgery", "virus", "injury"] #in real life should be extended, now only for insert table
+hospital_equipment_names = ["bandage", "brace", "cast", "catheter", "crutches", "defibrillator", "diagnostic equipment", "forceps", "incubator", "scalpel", "sling", "splint", "thermometer", "tongue depressor", "X-ray"]
+treatments = ["Acne", "Allergy testing", "Arrhythmia", "Asthma", "Bariatric surgery","Barium enema", "Back pain", "Bladder cancer",  "Blood pressure test", "Bowel incontinence", "Breast lift", "Blurred vision", "Broken nose", "Breathlessness", "Cancer tests", "Cardiac electrophysiology", "Cataracts", "Cerebral palsy", "Cheek implants", "Colposcopy", "Coronary angioplasty", "Chest pain", "Coughing", "Depression", "Diabetes", "Diarrhoea", "Dysphagia", "Eczema", "Eyelid problems", "Facelift",  "Fibroids", "Foot pain", "Frozen shoulder", "Gastroscopy", "Glaucoma", "General medicine", "Hair loss", "Heartburn", "Herpes", "Hip pain", "Hydrocele", "Itchy skin", "Knee pain", "Liver disease", "Night sweats", "Obesity", "Scoliosis", "Tongue tie", "Urology", "Radiotherapy"]
+qualifications = ["high", "medium", "intern"]
+types_of_employee = ["Nurse", "Doctor", "Economic Manager", "Supply Manager", "Receprionist"]
+ward_types_of_hospital = ["Emergency department", "Cardiology", "General Surgery", "Gynecology", "Critical Care", "Neurology", "Pain Management", "Physiotherapy", "Oncology"]
+schedule_examples = ["Do work related to patients","Do work related to your responsability zone"] # just examples to fill in table, can(and should) be much more detail
+notice_board_example = "Some important announcement! It will be done somehow at sometime with some activity in the our hospital!"
 
+
+
+def start():
+    global employee_amount
+    global patient_amount 
+    global guest_amount 
+    global treatment_amount 
+    global hospital_equipment_amount  
+    global appointment_amount
+    global doctor_amount
+    global nurse_amount
+    global economic_manager_amount
+    global supply_manager_amount
+    global receptionist_amount
+    print("-------------------------------------------")
+    print("Welcome to the hospital database interface!")
+    print("-------------------------------------------")
+    print("")
+    print("Please, input some needed amounts for our system:")
+    print("     Amount of employees:")
+    print("     (it should be >=5, as we should have at least 1 employee for each type: -doctor, -nurse, -supply manager, -economic manager, -receptionist)")
+    employee_amount = int(input())
+    while(employee_amount <5):
+        print("Sorry, give number of employees that is greater or equal 5! Input again:")
+        employee_amount = int(input())   
+    doctor_amount = random.randint(1,employee_amount- 4)
+    nurse_amount = random.randint(1,employee_amount - 3 - doctor_amount)
+    supply_manager_amount = random.randint(1,employee_amount - 2 - doctor_amount - nurse_amount)
+    economic_manager_amount = random.randint(1, employee_amount - supply_manager_amount  - doctor_amount - nurse_amount - 1)
+    receptionist_amount = employee_amount - supply_manager_amount  - doctor_amount - nurse_amount - economic_manager_amount
+    print("So, we have in total " + str(employee_amount) + " employees and randomly were decided that we have:" )
+    print(str(doctor_amount) +" doctor(s), "  + str(nurse_amount) + " nurse(s), " + str(supply_manager_amount) + " supply_manager(s), " + str(economic_manager_amount) + " economic_manager(s), " + str(receptionist_amount) + " receptionist(s)")
+    print("     Amount of patients:")
+    print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
+    patient_amount = int(input())
+    while(patient_amount < 1):
+        print("Sorry, give number of patients that is greater or equal 1! Input again:")
+        patient_amount = int(input())
+    print("     Amount of guests:")
+    print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
+    guest_amount = int(input())
+    while(guest_amount < 1):
+        print("Sorry, give number of guests that is greater or equal 1! Input again:")
+        guest_amount = int(input())
+    print("     Amount of treatments:")
+    print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
+    treatment_amount = int(input())
+    while(treatment_amount < 1):
+        print("Sorry, give number of treatments that is greater or equal 1! Input again:")
+        treatment_amount = int(input())
+    if treatment_amount > len(treatments): treatment_amount = len(treatments)
+    print("     Amount of hospital equipments:")
+    print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
+    hospital_equipment_amount = int(input())
+    while(hospital_equipment_amount < 1):
+        print("Sorry, give number of hospital equipments that is greater or equal 1! Input again:")
+        hospital_equipment_amount = int(input())
+    if hospital_equipment_amount > len(hospital_equipment_names): hospital_equipment_amount = len(hospital_equipment_names)
+    print("     Amount of appoinments between the particular doctor and the particular patient:")
+    print("     it should be >=1, as we want to fill in all tables to simulate working of the our hospital database")
+    appointment_amount = int(input())
+    while(appointment_amount < 1):
+        print("Sorry, give number of appointment_amount that is greater or equal 1! Input again:")
+        appointment_amount = int(input())
+    print("Thanks!")
+    print("-------------------------------------------------------------------------------")
 def generating_IDS(flag):
-    ids =  []
+    ids = []
     if flag == "E": 
         for i in range(employee_amount): ids.append('E-' + str(i+1) ) 
     elif flag == "P":
@@ -89,19 +115,12 @@ def generating_IDS(flag):
     elif flag == "T":
         for i in range(treatment_amount): ids.append('T-' + str(i+1)) 
     return ids
-E_IDs = generating_IDS("E")  #employees ids
-P_IDs = generating_IDS("P")  #patients ids
-HE_IDs = generating_IDS("HE") #hospital equipment ids
-T_IDs = generating_IDS("T")  #treatment ids
-G_IDs = generating_IDS("G") #guests ids
-
 def random_id(ids):
     id = random.choice(ids)
     while (id in used_id):
         id = random.choice(ids)
     used_id.append(id)
     return id
-
 def insert_employee():
     s = "INSERT INTO Employee VALUES\n"
     for i in range(employee_amount):
@@ -119,7 +138,7 @@ def insert_employee():
         global nurse_amount
         global economic_manager_amount
         global supply_manager_amount
-        global  receptionist_amount
+        global receptionist_amount
         while(flag == 0):
             type_of_employee = random.choice(types_of_employee)
             if type_of_employee == "Doctor" and doctor_amount>0:
@@ -221,9 +240,6 @@ def insert_make_appointment():
     return s
 def insert_optional_treatment():
     s = "INSERT INTO Optional_treatment VALUES\n"
-    global treatment_amount
-    if treatment_amount>len(treatments):
-        treatment_amount = treatments
     for i in range(treatment_amount):
         s += "("
         s = s + "'" + random_id(treatments) + "'," #Patient
@@ -298,9 +314,6 @@ def insert_stuff_schedule():
     return s
 def insert_hospital_equipment():
     s = "INSERT INTO Hospital_equipment VALUES\n"
-    global hospital_equipment_amount
-    if hospital_equipment_amount>len(hospital_equipment_names):
-        hospital_equipment_amount = len(hospital_equipment_names)
     for i in range(hospital_equipment_amount):
         s += "("
         s = s + "'" + random_id(hospital_equipment_names) + "'," #Patient
@@ -381,136 +394,56 @@ def insert_control():
 
     # print(s)
     return s       
+def first_query():
+    print("Please, choose the patient(by P_ID) that have lost the bag:")
+    for pid in P_IDs:
+        print(pid)
+    print("input pid:")
+    patient_id = input()
+    while(not(patient_id in P_IDs)):
+        print("There is no patient with such P_ID, please, try again:")
+        patient_id = input()
+    query1.replace("INPUT",patient_id)
+def implement_queries():
+    con = psycopg2.connect(database="dmd_project", user="postgres", password="12345", host="127.0.0.1", port="5432")
+    cur = con.cursor()
+    cur.execute(truncate)
+    cur.execute(main_insert)
+    print("Input number of the query to implement: ")
+    flag = int(input())
+    # while(flag<1 and flag>5):
+    #     print("Wrong number! We had 5 queries to implement --> it must be >0 and <6")
+    #     flag = int(input())
+    # if flag == 1: 
+    #     first_query()
+    #     cur.execute(query1);
+   
+    cur.execute(query); 
+    rows = cur.fetchall()
+    print("output:")
+    for row in rows:
+        print(row) 
+    con.commit()
+    print("--------------------------------------------------------------------")
+    con.close()
 
+if __name__ == "__main__":
+    # --------------------------------------
 
-main_insert = insert_employee()  + insert_patient()  + insert_guest()
-if stationary_patient_amount>0:
-    main_insert += insert_stationary_patient() + insert_visit()
-main_insert += insert_make_appointment() + insert_optional_treatment() + insert_get_optional_treatment() + insert_notice_board() + insert_stuff_schedule() + insert_hospital_equipment() + insert_medical_history()  + insert_donate() + insert_conclude_agreement() + insert_control()
+    start()
+    E_IDs = generating_IDS("E")  #employees ids
+    P_IDs = generating_IDS("P")  #patients ids
+    HE_IDs = generating_IDS("HE") #hospital equipment ids
+    T_IDs = generating_IDS("T")  #treatment ids
+    G_IDs = generating_IDS("G") #guests ids
+    main_insert = insert_employee()  + insert_patient()  + insert_guest()
+    if stationary_patient_amount>0:
+        main_insert += insert_stationary_patient() + insert_visit()
+    main_insert += insert_make_appointment() + insert_optional_treatment() + insert_get_optional_treatment() + insert_notice_board() + insert_stuff_schedule() + insert_hospital_equipment() + insert_medical_history()  + insert_donate() + insert_conclude_agreement() + insert_control()
+    f = open("insert.txt","w+")
+    f.write(main_insert)
+    f.close
+    print("The insert that our database has you can see in the insert.txt")
+    print("--------------------------------------------------------------------")
 
-print("So, our database has the following insert:\n")
-print("\n")
-print(main_insert)
-print("--------------------------------------------------------------------")
-
-truncate = """
-            TRUNCATE Patient CASCADE;
-            TRUNCATE Employee CASCADE;
-            TRUNCATE Stationary_patient CASCADE;
-            TRUNCATE Guest CASCADE;
-            TRUNCATE Make_an_appointment CASCADE;
-            TRUNCATE Optional_treatment CASCADE;
-            TRUNCATE Get_optional_treatment CASCADE;
-            TRUNCATE Visit CASCADE;
-            TRUNCATE Notice_board CASCADE;
-            TRUNCATE Stuff_schedule CASCADE;
-            TRUNCATE Hospital_equipment CASCADE;
-            TRUNCATE Medical_history CASCADE;
-            TRUNCATE Donate CASCADE;
-            TRUNCATE Conclude_agreement CASCADE;
-            TRUNCATE Control CASCADE;
-           """
-con = psycopg2.connect(database="dmd_project", user="postgres", password="12345", host="127.0.0.1", port="5432")
-print("Database opened successfully")
-print("--------------------------------------------------------------------")
-cur = con.cursor()
-
-
-cur.execute(truncate);
-
-query = "SELECT * FROM Patient"
-query1 =""" SELECT d.Name, d.Surname  FROM Employee as d INNER JOIN  Make_an_appointment as m
-             ON m.E_ID = d.E_ID and m.P_ID = 'P-1' and m.Date::DATE = (SELECT MAX(m.Date::DATE) as da FROM Employee as d INNER JOIN  Make_an_appointment as m
-             ON m.E_ID = d.E_ID and m.P_ID = 'P-1') 
-             WHERE
-             d.type = 'Doctor'
-             and ((d.surname LIKE 'L%' or d.surname LIKE 'M%' ) and (d.name NOT LIKE 'L%' and d.name NOT LIKE 'M%'))
-             or ((d.name LIKE 'L%' or d.name LIKE 'M%') and (d.surname NOT LIKE 'L%' and d.surname NOT LIKE 'M%'));
-        """
-query2 = """SELECT employee.e_id, app.date, count(*), (CAST(count(*) as FLOAT)/52), dow as app_avg \
-                    FROM Employee, (SELECT *, to_char(date, 'day') as dow FROM make_an_appointment) AS app WHERE employee.e_id=app.e_id AND \
-                    app.date > current_date - interval '365 days'\
-                    GROUP BY Employee.e_id, app.date, dow\
-                    ORDER BY Employee.e_id, dow, app.Date
-         """ 
-query3 ="""SELECT p.p_id, p.name, p.surname FROM
-            (SELECT num_app_week.p_id, COUNT(num_app_week.week) as w_count,
-            SUM(num_app_week.p_count) as all_patients FROM 
-            (--Selecting patients and number of their appointments for last 4 weeks
-            SELECT apps.p_id, COUNT(apps.p_id) as p_count, apps.week FROM 
-            ( --Selecting appointments for last 4 weeks
-            SELECT a.p_id, date_part('week', a.date) as week FROM make_an_appointment as a, patient as p
-            WHERE date_part('week', a.date) > date_part('week', current_date ) - 5 
-            AND date_part('week', a.date) < date_part('week', current_date ) 
-            AND a.p_id = p.p_id) as apps 
-            GROUP BY apps.p_id, apps.week
-            HAVING COUNT(apps.p_id) >= 2) as num_app_week
-            GROUP BY num_app_week.p_id
-            HAVING COUNT(num_app_week.p_count) = 4) as res, patient as p
-                WHERE res.p_id = p.p_id"""
-
-query4 ="""
-            SELECT SUM(T.cnt) as Amount
-            FROM
-            (SELECT COUNT(p.P_id)*200 AS cnt FROM patient as p INNER JOIN  Make_an_appointment as m
-              ON m.P_ID = P.P_ID 
-              WHERE 
-              Date > current_date - interval '1 month'
-              GROUP By M.P_ID, P.dob
-              HAVING Count(M.P_ID)<3 and EXTRACT(YEAR from AGE(P.dob))<50
-             UNION ALL
-             SELECT COUNT(p.P_id)*400 AS cnt FROM patient as p INNER JOIN  Make_an_appointment as m
-              ON m.P_ID = P.P_ID 
-              WHERE 
-              Date > current_date - interval '1 month'
-              GROUP By M.P_ID, P.dob
-              HAVING Count(M.P_ID)<3 and EXTRACT(YEAR from AGE(P.dob))>49
-             UNION ALL
-             SELECT COUNT(p.P_id)*500 AS cnt FROM patient as p INNER JOIN  Make_an_appointment as m
-              ON m.P_ID = P.P_ID 
-              WHERE 
-              Date > current_date - interval '1 month'
-              GROUP By M.P_ID, P.dob
-              HAVING Count(M.P_ID)>2 and EXTRACT(YEAR from AGE(P.dob))>49
-             UNION ALL
-             SELECT COUNT(p.P_id)*250 AS cnt FROM patient as p INNER JOIN  Make_an_appointment as m
-              ON m.P_ID = P.P_ID 
-              WHERE 
-              Date > current_date - interval '1 month'
-              GROUP By M.P_ID, P.dob
-              HAVING Count(M.P_ID)>2 and EXTRACT(YEAR from AGE(P.dob))<50
-             ) as T
-        """   
-query5 ="""SELECT e.e_id,e.Name,e.Surname FROM
-        (SELECT num_app_year.e_id, COUNT(num_app_year.d_year) as y_count, SUM(num_app_year.p_count) as all_patients FROM 
-        (SELECT apps.e_id, COUNT(apps.p_id) as p_count, apps.d_year FROM 
-        (SELECT a.p_id, a.e_id, date_part('year', a.date) as d_year FROM make_an_appointment as a, employee as e
-        WHERE 
-        date_part('year', a.date) > date_part('year', current_date) - 2 -- How many years
-        AND a.e_id = e.e_id AND e.type = 'Doctor') as apps 
-        GROUP BY apps.e_id, apps.d_year
-        HAVING COUNT(apps.e_id) >= 1) as num_app_year
-        GROUP BY num_app_year.e_id
-        HAVING COUNT(num_app_year.p_count) >= 2 -- Equal to how many years
-        AND SUM(num_app_year.p_count) > 2 -- Num of all patients per this period of time
-    ) as res, employee as e
-    WHERE res.e_id = e.e_id"""                     
-
-
-cur.execute(main_insert)
-
-cur.execute(query2);    
-rows = cur.fetchall()
-
-print("output:")
-for row in rows:
-    print(row) 
-con.commit()
-print("--------------------------------------------------------------------")
-print("Records inserted successfully")
-con.close()
-    print(row) 
-con.commit()
-print("--------------------------------------------------------------------")
-print("Records inserted successfully")
-con.close()
+    implement_queries()

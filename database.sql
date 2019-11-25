@@ -27,11 +27,7 @@ CREATE TABLE Patient(
 
 -- 3
 CREATE TABLE Stationary_patient (
-<<<<<<< HEAD
     Ward_type       VARCHAR(150) NOT NULL,
-=======
-    Ward_type       VARCHAR(12) NOT NULL,
->>>>>>> ad1d2dbe7d249ffb17b2d670c1b81f8103c17336
     Room_num        VARCHAR(15) NOT NULL,
     P_ID            VARCHAR(15) NOT NULL        REFERENCES Patient(P_ID)    PRIMARY KEY
 );
@@ -44,11 +40,7 @@ CREATE TABLE Guest(
 
 --5
 CREATE TABLE Make_an_appointment(
-<<<<<<< HEAD
   P_ID VARCHAR(150)    NOT NULL   REFERENCES Patient(P_ID),
-=======
-  P_ID VARCHAR(15)    NOT NULL   REFERENCES Patient(P_ID),
->>>>>>> ad1d2dbe7d249ffb17b2d670c1b81f8103c17336
   E_ID VARCHAR(15)    NOT NULL  REFERENCES Employee(E_ID),
   Date timestamp           NOT NULL,
   PRIMARY KEY(P_ID,E_ID,Date)
@@ -63,13 +55,9 @@ CREATE TABLE Optional_treatment(
 
 -- 7
 CREATE TABLE Get_optional_treatment (
-    P_ID            varchar(15) NOT NULL        REFERENCES Patient(P_ID),
-    T_ID            varchar(15) NOT NULL        REFERENCES Optional_treatment(T_ID),
-<<<<<<< HEAD
-    Date      date    NOT NULL,
-=======
-    Date 			date 		NOT NULL,
->>>>>>> ad1d2dbe7d249ffb17b2d670c1b81f8103c17336
+    P_ID            VARCHAR(15) NOT NULL        REFERENCES Patient(P_ID),
+    T_ID            VARCHAR(15) NOT NULL        REFERENCES Optional_treatment(T_ID),
+    Date      DATE    NOT NULL,
     PRIMARY KEY(P_ID, T_ID, Date)
 );
 
@@ -92,7 +80,7 @@ CREATE TABLE Notice_board(
 --10 
 CREATE TABLE Stuff_schedule(
     Schedule        VARCHAR(1000)   NOT NULL,
-    Date            DATE            NOT NULL,
+    Date            timestamp            NOT NULL,
     E_ID            varchar(15)     NOT NULL    REFERENCES Employee(E_ID),
     PRIMARY KEY(Date,E_ID)
 );
@@ -136,8 +124,5 @@ CREATE TABLE Control (
     HE_ID           VARCHAR(15)     NOT NULL,
     Supply_manager  VARCHAR(15)     NOT NULL    REFERENCES Employee(E_ID),
     PRIMARY KEY(HE_ID, Supply_manager)
-<<<<<<< HEAD
 );
-=======
-);
->>>>>>> ad1d2dbe7d249ffb17b2d670c1b81f8103c17336
+
