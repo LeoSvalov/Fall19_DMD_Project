@@ -88,8 +88,8 @@ query5 = """    SELECT e.e_id,e.Name,e.Surname FROM
                     GROUP BY apps.e_id, apps.d_year
                     HAVING COUNT(apps.e_id) >= 5) as num_app_year
                     GROUP BY num_app_year.e_id
-                    HAVING COUNT(num_app_year.p_count) >= 10 
-                    AND SUM(num_app_year.p_count) > 10
+                    HAVING COUNT(num_app_year.d_year) = 10 
+                    AND SUM(num_app_year.p_count) >= 100
                     ) as res, employee as e
                     WHERE res.e_id = e.e_id
          """  
